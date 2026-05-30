@@ -6,3 +6,4 @@ config = pulumi.Config()
 ssh_pub_key = config.require("sshPublicKey")
 
 # TODO
+print(f"Using public key: {ssh_pub_key}")
