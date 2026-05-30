@@ -1,0 +1,52 @@
+name: Pulumi GitOps
+
+on:
+  # Run `pulumi up` when code is merged into main
+  push:
+    branches:
+      - main
+  # Run `pulumi preview` when a Pull Request is opened against main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  infrastructure:
+    name: Provision Infrastructure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install
+        working-directory: ./infra
+
+      - name: Install dependencies (creates .venv)
+        run: uv sync
+        working-directory: ./infra
+
+      - name: Pulumi Preview (Pull Request)
+        if: github.event_name == 'pull_request'
+        uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: nanoclaw
+          work-dir: ./infra
+        env:
+          # This token lets Pulumi decrypt your Hetzner secrets and save state
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi Up (Merge to Main)
+        if: github.event_name == 'push'
+        uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: nanoclaw
+          work-dir: ./infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
