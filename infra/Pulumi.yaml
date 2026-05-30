@@ -1,0 +1,6 @@
+name: nanoclaw-infra
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: Deploying NanoClaw to my Hetzner Cloud

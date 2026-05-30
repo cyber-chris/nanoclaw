@@ -1,0 +1,4 @@
+config:
+  hcloud:token:
+    secure: AAABAE1xpOXUDvphnMF1X/xljZ+j/DOBFh/JmzF16azlcmx7UNq0PBkf+0iUL8UN/Hz5q662c8y7YXtewZML2OV6NFwkWowwvh1sQf8rdfhsIKYAf7KmgC3C8Ulb2hjA
+  nanoclaw-infra:sshPublicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+I51eUU2h5AACMvqWPE+UjbECuMWIbRlWdjDj/En8b ct@Chriss-MacBook-Air.local
