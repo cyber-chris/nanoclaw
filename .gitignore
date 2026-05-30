@@ -39,3 +39,18 @@ groups/*
 .nanoclaw/
 
 agents-sdk-docs
+
+# ==========================================
+# INFRASTRUCTURE & PULUMI
+# ==========================================
+# Python / uv virtual environment
+infra/.venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pulumi
+# Ignore Pulumi crash logs and local state (if using local backend)
+crash.log
+*.pulumi/
