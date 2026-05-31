@@ -41,7 +41,9 @@ firewall = hcloud.Firewall(
 template_path = os.path.join(os.path.dirname(__file__), "cloud-init.yaml")
 with open(template_path, "r", encoding="utf-8") as f:
     cloud_init = (
-        f.read().replace("__SSH_PUB_KEY__", ssh_pub_key).replace("__REPO_URL", repo_url)
+        f.read()
+        .replace("__SSH_PUB_KEY__", ssh_pub_key)
+        .replace("__REPO_URL__", repo_url)
     )
 
 if ssh_key.id is None:
