@@ -8,7 +8,7 @@ config = pulumi.Config()
 ssh_pub_key = config.require("sshPublicKey")
 
 server_type = config.get("serverType") or "cx33"
-location = config.get("location") or "fsn1"
+location = config.get("location") or "nbg1"
 image = config.get("image") or "ubuntu-24.04"
 repo_url = config.get("repoUrl") or "https://github.com/cyber-chris/nanoclaw.git"
 NAME = "nanoclaw"
@@ -44,13 +44,15 @@ with open(template_path, "r", encoding="utf-8") as f:
         f.read().replace("__SSH_PUB_KEY__", ssh_pub_key).replace("__REPO_URL", repo_url)
     )
 
+if ssh_key.id is None:
+    raise RuntimeError("ssh-key has no ID")
 server = hcloud.Server(
     "server",
     name=NAME,
     server_type=server_type,
     image=image,
     location=location,
-    ssh_keys=[ssh_key.id],
+    ssh_keys=[str(ssh_key.id)],
     firewall_ids=[firewall.id.apply(lambda fid: int(fid))],
     user_data=cloud_init,
     labels={"app": "nanoclaw"},
