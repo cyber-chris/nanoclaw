@@ -13,10 +13,9 @@ image = config.get("image") or "ubuntu-24.04"
 repo_url = config.get("repoUrl") or "https://github.com/cyber-chris/nanoclaw.git"
 NAME = "nanoclaw"
 
-ssh_key = hcloud.SshKey(
-    "ssh-key",
-    name=f"{NAME}-key",
-    public_key=ssh_pub_key,
+ssh_key = hcloud.get_ssh_key(
+    # This is ct@Chriss-MacBook-Air.local
+    fingerprint="9b:45:39:36:38:95:17:5b:62:df:20:97:23:26:14:f8"
 )
 
 firewall = hcloud.Firewall(
