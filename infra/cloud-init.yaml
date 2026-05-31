@@ -1,0 +1,44 @@
+#cloud-config
+# Bootstraps a Hetzner Cloud server for NanoClaw.
+# Tokens (__SSH_PUB_KEY__, __REPO_URL__) are substituted by __main__.py before
+# being passed to the server's user_data. Validate locally with:
+#   cloud-init schema --config-file cloud-init.yaml
+package_update: true
+package_upgrade: false
+
+users:
+  - default
+  - name: nanoclaw
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - __SSH_PUB_KEY__
+
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - build-essential
+
+# 1G swap as a release valve for transient memory spikes during container
+# builds / pnpm install. Handled declaratively (idempotent) by the swap module
+# rather than runcmd. Bump to 2G if you hit OOM on the smaller (4 GB) cpx22.
+swap:
+  filename: /swapfile
+  size: 1G
+  maxsize: 1G
+
+runcmd:
+  # Docker Engine
+  - curl -fsSL https://get.docker.com | sh
+  - usermod -aG docker nanoclaw
+  - systemctl enable --now docker
+  # Node 22 LTS + pnpm
+  - curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+  - apt-get install -y nodejs
+  - corepack enable
+  - corepack prepare pnpm@latest --activate
+  # Clone the fork as the nanoclaw user
+  - sudo -u nanoclaw git clone __REPO_URL__ /home/nanoclaw/nanoclaw
+  - chown -R nanoclaw:nanoclaw /home/nanoclaw/nanoclaw
