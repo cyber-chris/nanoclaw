@@ -7,7 +7,7 @@ import pulumi_hcloud as hcloud
 config = pulumi.Config()
 ssh_pub_key = config.require("sshPublicKey")
 
-server_type = config.get("serverType") or "cx33"
+server_type = config.get("serverType") or "cpx22"
 location = config.get("location") or "nbg1"
 image = config.get("image") or "ubuntu-24.04"
 repo_url = config.get("repoUrl") or "https://github.com/cyber-chris/nanoclaw.git"
